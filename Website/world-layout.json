@@ -1,0 +1,143 @@
+{
+  "version": 3,
+  "scene": {
+    "asset": "dist/assets/world-expanded.webp",
+    "width": 1536,
+    "height": 1024,
+    "camera": "38-degree isometric",
+    "lighting": "shared cool twilight, warm interior lights"
+  },
+  "equalTerritory": {
+    "area": 1000000,
+    "worldWidth": 450,
+    "worldHeight": 260
+  },
+  "communities": [
+    {
+      "id": "huddle",
+      "center": [
+        0.33,
+        0.345
+      ]
+    },
+    {
+      "id": "memeland",
+      "center": [
+        0.67,
+        0.345
+      ]
+    },
+    {
+      "id": "hilumia",
+      "center": [
+        0.33,
+        0.585
+      ]
+    },
+    {
+      "id": "bunny",
+      "center": [
+        0.67,
+        0.585
+      ]
+    }
+  ],
+  "sharedArena": {
+    "axis": 0.5,
+    "entry": [
+      0.5,
+      0.595
+    ]
+  },
+  "expansion": "Retain community source artwork and identities. Re-art-direct the unified environment with equal-size new territories, then update the registry and matching coordinates; do not stretch or crop existing districts to make space.",
+  "unrevealed": [
+    {
+      "id": "veiled-1",
+      "name": "???",
+      "center": [
+        0.17,
+        0.2
+      ],
+      "area": 1000000,
+      "state": "unrevealed",
+      "canJoin": false
+    },
+    {
+      "id": "veiled-2",
+      "name": "???",
+      "center": [
+        0.5,
+        0.133
+      ],
+      "area": 1000000,
+      "state": "unrevealed",
+      "canJoin": false
+    },
+    {
+      "id": "veiled-3",
+      "name": "???",
+      "center": [
+        0.845,
+        0.2
+      ],
+      "area": 1000000,
+      "state": "unrevealed",
+      "canJoin": false
+    },
+    {
+      "id": "veiled-4",
+      "name": "???",
+      "center": [
+        0.91,
+        0.469
+      ],
+      "area": 1000000,
+      "state": "unrevealed",
+      "canJoin": false
+    },
+    {
+      "id": "veiled-5",
+      "name": "???",
+      "center": [
+        0.836,
+        0.761
+      ],
+      "area": 1000000,
+      "state": "unrevealed",
+      "canJoin": false
+    },
+    {
+      "id": "veiled-6",
+      "name": "???",
+      "center": [
+        0.5,
+        0.855
+      ],
+      "area": 1000000,
+      "state": "unrevealed",
+      "canJoin": false
+    },
+    {
+      "id": "veiled-7",
+      "name": "???",
+      "center": [
+        0.178,
+        0.77
+      ],
+      "area": 1000000,
+      "state": "unrevealed",
+      "canJoin": false
+    },
+    {
+      "id": "veiled-8",
+      "name": "???",
+      "center": [
+        0.093,
+        0.469
+      ],
+      "area": 1000000,
+      "state": "unrevealed",
+      "canJoin": false
+    }
+  ]
+}
