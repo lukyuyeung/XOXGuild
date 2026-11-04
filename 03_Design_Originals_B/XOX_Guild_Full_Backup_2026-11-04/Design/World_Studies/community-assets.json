@@ -1,0 +1,10 @@
+{
+  "updated": "2026-11-03",
+  "plot_spec": "/workspace/work/guild-world/plot-standard.json",
+  "modules": [
+    {"community":"Azuki / Hilumia","image":"/workspace/generated_images/exec-5bc4d48a-db18-430b-a817-42750e4776fe.png","territory_units":{"width":1000,"depth":1000}},
+    {"community":"Memeland","image":"/workspace/generated_images/exec-2fa8765a-9017-4a35-9d29-ec122a568dee.png","territory_units":{"width":1000,"depth":1000},"brand_constraint":"Ship sail must use the angular 9GAG graphic, never an ordinary number 9.","logo_reference":"/workspace/work/guild-world/9gag-logo-reference.png","logo_source":"https://commons.wikimedia.org/wiki/File:9gag_logo.svg"},
+    {"community":"Pudgy Penguins / The Huddle","image":"/workspace/generated_images/exec-1c33658f-6e1f-458e-9888-158ed7c08cde.png","territory_units":{"width":1000,"depth":1000}}
+  ],
+  "status":"Standalone visual concepts. Shared territory masks and true land-area normalization have not yet been applied in an assembled interactive map. Keep all sea props within each equal-size territory."
+}

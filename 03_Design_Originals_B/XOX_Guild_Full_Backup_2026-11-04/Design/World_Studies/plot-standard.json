@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "purpose": "Equal community territory modules for the XOX Guild World concept",
+  "coordinate_units": "design units, not real-world metres",
+  "shared_spec": {
+    "territory_bounds": {"width": 1000, "depth": 1000},
+    "land_area_budget": 600000,
+    "coastal_water_budget": 400000,
+    "camera": {"projection": "orthographic", "azimuth_degrees": 45, "elevation_degrees": 38},
+    "frame": {"width_px": 1536, "height_px": 1024, "scale": "identical across community modules"},
+    "shared_port": {"width": 60, "bridge_width": 35},
+    "offshore_elements": "Kraken, ships, treasure islets, ice floes and piers must remain inside the same territory bounds; no extra area entitlement",
+    "branding": "Preserve community identity; apply shared XOX treatment only to connector infrastructure"
+  },
+  "communities": ["Memeland", "Pudgy Penguins / The Huddle", "Azuki / Hilumia"],
+  "implementation_note": "These dimensions are the future map module contract. Generated concept illustrations approximate this contract; equal actual territory and land areas require applying the shared world-space masks in the interactive map, not judging raster artwork framing alone."
+}
