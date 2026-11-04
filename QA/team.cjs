@@ -1,0 +1,34 @@
+const {JSDOM,VirtualConsole}=require('jsdom');
+const fs=require('fs'),assert=require('assert');
+const base=require('path').resolve(__dirname,'../Website/dist')+'/';
+const virtualConsole=new VirtualConsole();let errors=[];
+virtualConsole.on('jsdomError',e=>{if(!/Not implemented/.test(e.message))errors.push(e.message)});
+const html=fs.readFileSync(base+'index.html','utf8').replace(/<script[^>]*src[^>]*><\/script>/g,'').replace(/<link[^>]+>/g,'');
+const dom=new JSDOM(html,{
+ url:'https://xox-demo.test/',runScripts:'dangerously',pretendToBeVisual:true,virtualConsole,
+ beforeParse(w){
+  w.scrollTo=()=>{};w.HTMLElement.prototype.scrollIntoView=()=>{};
+  w.HTMLDialogElement.prototype.showModal=function(){this.open=true};
+  w.HTMLDialogElement.prototype.close=function(){this.open=false};
+  w.HTMLFormElement.prototype.requestSubmit=function(){this.dispatchEvent(new w.Event('submit',{bubbles:true,cancelable:true}))};
+ }
+});
+const w=dom.window,d=w.document;w.addEventListener('error',e=>errors.push(e.error?.stack||e.message));
+for(const file of ['style.css','pages.css','flows.css','season.css','world.css','journey.css','world-redesign.css','trader-home.css','community-identity.css','climb-home.css','guild-ranks.css','readability.css','team-workspace.css']){const style=d.createElement('style');style.textContent=fs.readFileSync(base+file,'utf8');d.head.appendChild(style)}
+for(const file of ['app.js','pages.js','flows.js','season.js','world.js','journey.js','trader-home.js','community-identity.js','climb-home.js','guild-ranks.js','team-workspace.js']){const script=d.createElement('script');script.textContent=fs.readFileSync(base+file,'utf8');d.body.appendChild(script)}
+const q=s=>{const el=d.querySelector(s);assert(el,'Missing '+s);return el};
+const click=s=>q(s).click();const fill=(s,v)=>{q(s).value=v;q(s).dispatchEvent(new w.Event('input',{bubbles:true}))};
+const tick=()=>new Promise(r=>setTimeout(r,5));
+const go=async path=>{w.location.hash='#/'+path;await tick()};
+const submit=s=>q(s).dispatchEvent(new w.Event('submit',{bubbles:true,cancelable:true}));
+(async()=>{
+await go('my-guild?preview=1');assert(q('#workspace .team-workspace'));assert(q('.team-match-banner').textContent.includes('Memeland'));assert(!q('#workspace').textContent.includes('Enter my guild'));assert(!q('#workspace').textContent.includes('Your next move'));assert(!q('#workspace').querySelector('[data-team-policy]'));assert.equal(d.querySelectorAll('#workspace .climb-sidebar').length,1);assert(q('.team-members-panel'));assert(!q('#workspace').querySelector('.page-tabs'));assert(!q('.team-workspace-main').querySelector('[href="#/discover"]'));click('[data-team-match-rules]');assert(q('#modal-content').textContent.includes('Guild Battle'));q('#modal').close();
+w.eval("state.membership={id:'huddle',role:'member',name:'Team Tester'};save()");await go('my-guild');assert(q('.team-identity h1').textContent==='Pudgy Penguins');assert(q('.team-pin-panel'));assert(q('.team-dashboard'));assert(q('.team-copy-closed'));assert(!w.eval("canCopyGuildLeader(leaderById('satoshi'))"));w.eval("startCopy('satoshi')");assert(!d.querySelector('#copy-setup-form'));q('#modal').close();fill('#team-member-search','Team Tester');assert.equal(q('#team-member-body').querySelectorAll('tr').length,1);assert(q('#team-member-body').textContent.includes('YOU'));fill('#team-member-search','');click('.team-pin-panel [data-open-chat]');assert.equal(w.eval('currentChatId()'),'huddle');w.eval('closeGuildChat()');
+w.eval("state.membership.role='owner';save()");click('.team-pin-panel [data-team-pin]');fill('#team-pin-text','Review the BTC setup <team>');submit('#team-pin-form');assert(q('.team-pin-panel').textContent.includes('<team>'));assert(!q('.team-pin-panel').querySelector('team'));click('.team-copy-panel [data-team-policy]');q('#team-policy-form [name="enabled"]').checked=true;submit('#team-policy-form');assert(w.eval("teamConfig('huddle').copying.enabled"));assert(q('.team-copy-provider'));assert(!w.eval("canCopyGuildLeader(leaderById('satoshi'))"));
+w.eval("state.membership.role='member';save()");click('.team-copy-panel [data-start-copy]');assert(q('#copy-setup-form'));fill('#copy-allocation','300');click('[data-copy-next]');click('[data-copy-next]');q('[name="riskAck"]').checked=true;q('[name="demoAck"]').checked=true;submit('#copy-setup-form');q('#modal').close();await go('my-guild');assert(q('.team-inline-plan').textContent.includes('RUNNING'));click('.team-inline-plan [data-plan-toggle]');assert(q('.team-inline-plan').textContent.includes('PAUSED'));click('.team-inline-plan [data-plan-toggle]');assert(q('.team-inline-plan').textContent.includes('RUNNING'));
+w.eval("state.membership.role='owner';save()");click('.team-copy-panel [data-team-policy]');q('#team-copy-source').value='analyst';q('#team-analyst').selectedIndex=1;submit('#team-policy-form');assert.equal(w.eval('state.copyPlans[0].status'),'paused');assert(q('.team-copy-provider').textContent.includes('Analyst'));const analyst=w.eval("teamProvider(guildById('huddle')).id");w.eval("state.membership.role='member';save()");assert(w.eval("canCopyGuildLeader(leaderById('"+analyst+"'))"));assert(!w.eval("canCopyGuildLeader(leaderById('satoshi'))"));click('.team-copy-panel [data-start-copy]');assert(q('.copy-target small').textContent.includes('Analyst'));q('#modal').close();
+w.eval("state.membership.role='owner';save()");click('.team-copy-panel [data-team-policy]');q('#team-policy-form [name="enabled"]').checked=false;submit('#team-policy-form');assert(q('.team-copy-closed'));w.eval("state.membership.role='member';save()");assert(!w.eval("canCopyGuildLeader(leaderById('"+analyst+"'))"));
+await go('guild/huddle');assert(q('.team-workspace'));assert(!q('#workspace').textContent.includes('Enter my guild'));await go('guild/memeland');assert(q('.team-public-visit'));assert(q('#workspace .climb-sidebar'));assert(!d.querySelector('#workspace #team-member-body'));await go('guild/memeland/members');assert(q('.world-member-lock'));assert(!q('#workspace').querySelector('#team-member-body'));
+for(const path of ['my-guild/members','my-guild/copy','my-guild/missions','arena','world','rankings','discover']){await go(path);assert(q('#workspace').querySelector('h1'),path)}
+await go('my-guild');assert(q('.team-workspace'));assert(w.getComputedStyle(q('.team-pin-panel>p')).fontSize==='14px');assert.deepEqual(errors,[]);console.log('PASS: single guild workspace/preview, sample opponent banner, no redundant entry/discovery/tabs, persistent standings, pin editing/escaping, member search/chat, leader-only policy, independent member copying, pause/provider switch/disable, analyst identity, public privacy and legacy subroutes.');dom.window.close();
+})().catch(e=>{console.error(e);console.error(errors);process.exit(1)});
